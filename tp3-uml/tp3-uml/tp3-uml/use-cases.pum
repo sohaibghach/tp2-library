@@ -1,0 +1,49 @@
+@startuml
+left to right direction
+
+skinparam packageStyle rectangle
+
+actor User
+actor Member
+actor Librarian
+actor "Mail server" as Mail <<system>>
+
+User <|-- Member
+User <|-- Librarian
+
+rectangle "Library system" {
+  usecase "Search the catalog" as Search
+  usecase "Reserve a book" as Reserve
+  usecase "Renew a loan" as Renew
+  usecase "Check borrowing rights" as Check
+  usecase "Register a loan" as Lend
+  
+  usecase Return as "Register a return
+extension points
+late return"
+  
+  usecase "Suspend the member" as Suspend
+  usecase "Manage the catalog" as Manage
+}
+
+User --> Search
+Member --> Reserve
+Member --> Renew
+Librarian --> Renew
+Librarian --> Lend
+Librarian --> Return
+Librarian --> Manage
+
+Reserve --> Mail : <<actor>>
+
+Renew ..> Check : <<include>>
+Lend ..> Check : <<include>>
+
+Suspend ..> Return : <<extend>>
+
+note right of Suspend
+  condition: {returned late}
+  extension point: late return
+end note
+
+@enduml

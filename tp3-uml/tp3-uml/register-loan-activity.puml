@@ -1,0 +1,42 @@
+@startuml
+!pragma layout smetana
+skinparam defaultTextAlignment center
+
+|Librarian|
+start
+:Start loan registration;
+
+|System|
+:Check borrowing rights;
+if (Borrowing rights valid?) then (no)
+  ' Exception 3a: rights refused
+  |Librarian|
+  :Inform member that borrowing rights are refused;
+  stop
+else (yes)
+  repeat
+    |Librarian|
+    :Enter book copy identifier (Step 4);
+    |System|
+    :Verify copy availability and reservation status (Step 5);
+    if (Copy reserved for another member?) then (yes)
+      ' Exception 5a: copy reserved for another member
+      |System|
+      :Notify that copy is reserved for another member;
+      :Ask whether to try another copy;
+    else (no)
+      :Mark copy as available for loan;
+    endif
+  repeat while (Another copy?) is (yes)
+  -> no;
+
+  |System|
+  :Record the loan;
+  :Update loan status and due date;
+
+  |Librarian|
+  :Confirm loan to member;
+  stop
+endif
+
+@enduml

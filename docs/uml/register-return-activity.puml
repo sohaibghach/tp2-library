@@ -1,0 +1,26 @@
+@startuml
+start
+:Librarian is authenticated and starts return;
+repeat
+  :Scan copy barcode;
+  if (Barcode readable?) then (yes)
+    if (Copy is on loan?) then (yes)
+      :Record return and update copy/loan status;
+    else (no - not on loan)
+      :Display "Copy is not on loan" error;
+    endif
+  else (no - unreadable)
+    :Display barcode read error;
+    :Enter copy ID manually;
+    if (Copy is on loan?) then (yes)
+      :Record return and update copy/loan status;
+    else (no)
+      :Display "Copy is not on loan" error;
+    endif
+  endif
+repeat while (More copies to return?) is (yes)
+-> no;
+:Notify Mail server if needed;
+:Print the receipt;
+stop
+@enduml

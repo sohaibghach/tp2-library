@@ -1,0 +1,16 @@
+@startuml
+start
+:Librarian initiates loan registration;
+:Scan member card and verify membership;
+while (More copies to register?) is (yes)
+  :Scan copy barcode;
+  if (Copy available and not reserved?) then (yes)
+    :Register the loan;
+  else (no)
+    :Reject copy / report unavailable or reserved;
+  endif
+endwhile (no)
+:Confirm loan to member;
+:Print the receipt;
+stop
+@enduml
